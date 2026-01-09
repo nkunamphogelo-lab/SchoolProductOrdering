@@ -1,20 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using SchoolProductOrdering.Data;
+using SchoolProductOrdering.Models;
 
 namespace SchoolProductOrdering.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly SchoolProductOrdering.Data.ApplicationDbContext _context;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(SchoolProductOrdering.Data.ApplicationDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public void OnGet()
-        {
+        public IList<Product> Product { get;set; } = default!;
 
+        public async Task OnGetAsync()
+        {
+            Product = await _context.Products.ToListAsync();
         }
     }
 }
