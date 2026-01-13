@@ -1,22 +1,26 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* PNA-inspired Clean Background */
 body {
-  margin-bottom: 60px;
+    background-color: #f8f9fa;
+    color: #333;
 }
+
+/* Red Heading Style from your LM.png */
+.brand-title {
+    color: #CF3338;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+/* The Green 'Add Product' button from your screenshot */
+.btn-pna-green {
+    background-color: #017C45;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+
+    .btn-pna-green:hover {
+        background-color: #016337;
+        color: white;
+    }

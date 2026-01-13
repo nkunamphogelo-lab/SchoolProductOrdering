@@ -1,54 +1,20 @@
 ﻿@page
 @model SchoolProductOrdering.Pages.IndexModel
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Welcome";
 }
 
-<h1>Index</h1>
+<div class="container text-center py-5">
+    <h1 class="display-3 fw-bold" style="color: #CF3338;">Welcome to LearnMate</h1>
+    <p class="lead text-muted mb-5">Your destination for quality school supplies.</p>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Product[0].Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product[0].Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product[0].Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product[0].ImagePath)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Product) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImagePath)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+        <a asp-controller="Products" asp-action="Index" class="btn btn-lg px-5 shadow-sm text-white" style="background-color: #017C45; border-radius: 50px;">
+            Start Shopping
+        </a>
+
+        <a asp-controller="Products" asp-action="Create" class="btn btn-lg btn-outline-dark px-5 shadow-sm" style="border-radius: 50px;">
+            + Add New Product
+        </a>
+    </div>
+</div>
