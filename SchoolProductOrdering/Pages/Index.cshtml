@@ -1,20 +1,20 @@
 ﻿@page
-@model SchoolProductOrdering.Pages.IndexModel
+@model IndexModel
 @{
-    ViewData["Title"] = "Welcome";
+    ViewData["Title"] = "Home";
 }
 
 <div class="container text-center py-5">
-    <h1 class="display-3 fw-bold" style="color: #CF3338;">Welcome to LearnMate</h1>
-    <p class="lead text-muted mb-5">Your destination for quality school supplies.</p>
+    <div class="py-5 mt-5">
+        <h1 class="display-2 fw-bold" style="color: #CF3338;">Welcome to LearnMate</h1>
+        <p class="lead text-muted mb-5">High-quality stationery and electronics for students.</p>
 
-    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-        <a asp-controller="Products" asp-action="Index" class="btn btn-lg px-5 shadow-sm text-white" style="background-color: #017C45; border-radius: 50px;">
-            Start Shopping
-        </a>
-
-        <a asp-controller="Products" asp-action="Create" class="btn btn-lg btn-outline-dark px-5 shadow-sm" style="border-radius: 50px;">
-            + Add New Product
-        </a>
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+            <a asp-page="/Products/Index"
+               class="btn btn-lg text-white px-5 shadow fw-bold"
+               style="background-color: #017C45; border-radius: 8px; padding: 12px 30px; border: none;">
+                Start Shopping
+            </a>
+        </div>
     </div>
 </div>

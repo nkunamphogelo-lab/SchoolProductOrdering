@@ -19,10 +19,13 @@ namespace SchoolProductOrdering.Pages.Products
             _context = context;
         }
 
-        public IList<Product> Product { get;set; } = default!;
+        // This list holds the products fetched from the database
+        public IList<Product> Product { get; set; } = default!;
 
+        // This is the GET method that runs when you open the page
         public async Task OnGetAsync()
         {
+            // This pulls the seeded products (Laptop, Mouse, etc.) into the list
             Product = await _context.Products.ToListAsync();
         }
     }
