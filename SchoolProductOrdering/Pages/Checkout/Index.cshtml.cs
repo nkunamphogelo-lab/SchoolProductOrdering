@@ -8,25 +8,27 @@ namespace SchoolProductOrdering.Pages.Checkout
 {
     public class IndexModel : PageModel
     {
-        // 1. Property to hold the items for the checkout list
         public List<CartItem> CartItems { get; set; } = new();
 
-        // 2. Property to calculate the total price for the order summary
         public decimal TotalAmount => CartItems.Sum(item => item.Price * item.Quantity);
 
-        public void OnGet()
+        // 1. Added property to tell the HTML to show the success message
+        public bool IsSuccess { get; set; } = false;
+
+        public void OnGet(bool success = false)
         {
-            // 3. Retrieve the cart items from the Session memory
+            // If the URL has ?success=true, we show the thank you message
+            IsSuccess = success;
+
             var cartJson = HttpContext.Session.GetString("CartItems");
 
             if (!string.IsNullOrEmpty(cartJson))
             {
-                // Convert the JSON text back into a C# list of CartItems
                 CartItems = JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new();
             }
         }
 
-        // 4. Method to clear the cart after payment or if the user clicks "Clear"
+        // 2. Updated UpdateQuantity to handle the Trash Can as well
         public IActionResult OnPostUpdateQuantity(int productId, int increment)
         {
             var cartJson = HttpContext.Session.GetString("CartItems");
@@ -37,20 +39,38 @@ namespace SchoolProductOrdering.Pages.Checkout
 
             if (item != null)
             {
-                // Increase or decrease the quantity
                 item.Quantity += increment;
 
-                // If quantity drops to 0, remove the item entirely
                 if (item.Quantity <= 0)
                 {
                     cart.Remove(item);
                 }
             }
 
-            // Save the updated list back to the session
             HttpContext.Session.SetString("CartItems", JsonSerializer.Serialize(cart));
             HttpContext.Session.SetInt32("CartCount", cart.Sum(i => i.Quantity));
 
+            return RedirectToPage();
+        }
+
+        // 3. New Method: Process Payment and Clear Cart
+        public IActionResult OnPostProcessPayment()
+        {
+            // Here you would normally save the order to a Database
+
+            // Clear the session data
+            HttpContext.Session.Remove("CartItems");
+            HttpContext.Session.SetInt32("CartCount", 0);
+
+            // Redirect back to the GET method with a success flag
+            return RedirectToPage(new { success = true });
+        }
+
+        // 4. Method to manually clear the cart
+        public IActionResult OnPostClearCart()
+        {
+            HttpContext.Session.Remove("CartItems");
+            HttpContext.Session.SetInt32("CartCount", 0);
             return RedirectToPage();
         }
     }
