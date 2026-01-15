@@ -34,7 +34,7 @@ namespace SchoolProductOrdering.Data
                     Name = "Mouse",
                     Price = 200,
                     Description = "USB Mouse",
-                    ImagePath = "images/products/USB Mouse.jpg"
+                    ImagePath = "images/products/Mouse.jpg"
                 },
                 new Product
                 {
@@ -63,6 +63,20 @@ namespace SchoolProductOrdering.Data
                     Price = 200,
                     Description = "  file display book",
                     ImagePath = "images/products/USB Mouse.jpg"
+                },
+                new Product
+                {
+                    Name = "Scientific Calculator",
+                    Price = 350,
+                    Description = "Advanced math calculator",
+                    ImagePath = "/images/products/calculator.jpg"
+                },
+                new Product
+                {
+                    Name = "Pencil Case",
+                    Price = 80,
+                    Description = "Large capacity pencil case",
+                    ImagePath = "/images/products/pencilcase.jpg"
                 }
             );
 

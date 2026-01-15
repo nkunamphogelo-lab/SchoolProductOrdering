@@ -21,6 +21,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-page="/Products/Index">Products</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark position-relative" asp-page="/Checkout/Index">
+                                <i class="bi bi-cart4" style="font-size: 1.2rem;"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    @(Context.Session.GetInt32("CartCount") ?? 0)
+                                </span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>

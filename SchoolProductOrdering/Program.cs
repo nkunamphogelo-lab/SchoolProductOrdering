@@ -1,43 +1,22 @@
-using Microsoft.EntityFrameworkCore;
-using SchoolProductOrdering.Data;
-
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. ADD CONTROLLER SERVICES (Required for MVC)
-builder.Services.AddControllersWithViews();
-builder.Services.AddSession();
+// 1. Add Session services
 builder.Services.AddRazorPages();
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
-// 2. RUN SEED DATA
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    SeedData.Initialize(services);
-}
+// ... other middleware ...
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseRouting();
+
+// 2. Enable Session - This MUST be between UseRouting and UseMapRazorPages
 app.UseSession();
+
 app.UseAuthorization();
-
-// 3. FIX THE ROUTING MAP
-// This tells the app to look for the Home Controller first when it starts
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
 app.MapRazorPages();
-
 app.Run();
