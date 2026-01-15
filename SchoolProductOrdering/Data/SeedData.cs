@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolProductOrdering.Models;
+using SchoolProductOrdering.Data;
 
 namespace SchoolProductOrdering.Data
 {
@@ -10,78 +11,56 @@ namespace SchoolProductOrdering.Data
             using var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
 
+            // If there is already data, don't add more
             if (context.Products.Any())
                 return;
 
-            // Inside Data/SeedData.cs
             context.Products.AddRange(
                 new Product
                 {
-                    Name = "Laptop",
-                    Price = 12000,
-                    Description = "School laptop",
-                    ImagePath = "images/products/School laptop.jpg"
-                },
-                new Product
-                {
-                    Name = "Headphones",
-                    Price = 500,
-                    Description = "Wireless headphones",
-                    ImagePath = "images/products/Wireless headphones.jpg"
-                },
-                new Product
-                {
-                    Name = "Mouse",
-                    Price = 200,
-                    Description = "USB Mouse",
-                    ImagePath = "images/products/Mouse.jpg"
-                },
-                new Product
-                {
-                    Name = "Mouse",
-                    Price = 200,
-                    Description = "USB Mouse",
-                    ImagePath = "images/products/USB Mouse.jpg"
-                },
-                new Product
-                {
-                    Name = "Mouse",
-                    Price = 200,
-                    Description = "USB Mouse",
-                    ImagePath = "images/products/USB Mouse.jpg"
-                },
-                new Product
-                {
-                    Name = "Typek A4",
-                    Price = 100,
-                    Description = "USB Mouse",
-                    ImagePath = "images/products/Typek A4.jpg"
-                },
-                new Product
-                {
-                    Name = "Butterfly A4 20 pocket",
-                    Price = 200,
-                    Description = "  file display book",
-                    ImagePath = "images/products/USB Mouse.jpg"
-                },
-                new Product
-                {
                     Name = "Scientific Calculator",
-                    Price = 350,
-                    Description = "Advanced math calculator",
+                    Price = 350.00m,
+                    Description = "Advanced math calculator for high school and university.",
                     ImagePath = "/images/products/calculator.jpg"
                 },
                 new Product
                 {
-                    Name = "Pencil Case",
-                    Price = 80,
-                    Description = "Large capacity pencil case",
-                    ImagePath = "/images/products/pencilcase.jpg"
+                    Name = "A4 Typek Paper (500 Sheets)",
+                    Price = 95.00m,
+                    Description = "High-quality 80gsm white printing paper.",
+                    ImagePath = "/images/products/typek-a4.jpg"
+                },
+                new Product
+                {
+                    Name = "Butterfly A4 Display Book",
+                    Price = 45.00m,
+                    Description = "20-pocket file for organizing school assignments.",
+                    ImagePath = "/images/products/display-book.jpg"
+                },
+                new Product
+                {
+                    Name = "HB Pencils (12 Pack)",
+                    Price = 35.00m,
+                    Description = "Standard graphite pencils for writing and sketching.",
+                    ImagePath = "/images/products/pencils.jpg"
+                },
+                new Product
+                {
+                    Name = "Hardcover Notebook (A4)",
+                    Price = 40.00m,
+                    Description = "192-page feint and margin ruled notebook.",
+                    ImagePath = "/images/products/notebook.jpg"
+                },
+                new Product
+                {
+                    Name = "Bic Ballpoint Pens (Blue 10pk)",
+                    Price = 30.00m,
+                    Description = "Smooth writing pens for daily school work.",
+                    ImagePath = "/images/products/pens.jpg"
                 }
             );
 
-            context.SaveChanges();
-        }
-    }
-}
- 
+            context.SaveChanges(); // Commit to SQL database
+        } // Closes Initialize method
+    } // Closes SeedData class
+} // Closes namespace SchoolProductOrdering.Data

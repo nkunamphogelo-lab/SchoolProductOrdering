@@ -1,52 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http; // IMPORTANT: Needed for Session
-using SchoolProductOrdering.Data;
 using SchoolProductOrdering.Models;
+using SchoolProductOrdering.Data;
+using System.Text.Json;
 
 namespace SchoolProductOrdering.Pages.Products
 {
     public class IndexModel : PageModel
     {
-        private readonly SchoolProductOrdering.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext db_context;
 
-        public IndexModel(SchoolProductOrdering.Data.ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context)
         {
-            _context = context;
+            db_context = context;
         }
 
-        public IList<Product> Product { get; set; } = default!;
+        // Holds the list of products for the catalog
+        public List<Product> Products { get; set; } = new();
 
         public async Task OnGetAsync()
         {
-            Product = await _context.Products.ToListAsync();
+            // Fetch all products from the database
+            Products = await db_context.Products.ToListAsync();
+
+            // This ensures the page "remembers" the cart when it loads
+            var cartJson = HttpContext.Session.GetString("CartItems");
+            if (!string.IsNullOrEmpty(cartJson))
+            {
+                // We don't need to do anything with the list here, 
+                // but this ensures the Session is active.
+            }
         }
 
-        // NEW: This method handles the "Add to Cart" button click
         public async Task<IActionResult> OnPostAddToCartAsync(int productId)
         {
-            var product = await _context.Products.FindAsync(productId);
+            var product = await db_context.Products.FindAsync(productId);
+            if (product == null) return NotFound();
 
-            if (product == null)
+            // Retrieve current cart
+            var cartJson = HttpContext.Session.GetString("CartItems");
+            var cart = string.IsNullOrEmpty(cartJson)
+                ? new List<CartItem>()
+                : JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new();
+
+            // Add the item to the list
+            cart.Add(new CartItem
             {
-                return NotFound();
-            }
+                ProductId = product.Id,
+                ProductName = product.Name,
+                Price = product.Price,
+                Quantity = 1
+            });
 
-            // 1. Get current cart count from Session
-            int currentCount = HttpContext.Session.GetInt32("CartCount") ?? 0;
+            // Save the list back to Session
+            HttpContext.Session.SetString("CartItems", JsonSerializer.Serialize(cart));
 
-            // 2. Increase it by 1
-            currentCount++;
+            // Update the little red number in the Navbar
+            HttpContext.Session.SetInt32("CartCount", cart.Count);
 
-            // 3. Save it back to Session
-            HttpContext.Session.SetInt32("CartCount", currentCount);
-
-            // 4. Refresh the page to show the updated counter in the Navbar
             return RedirectToPage();
         }
     }

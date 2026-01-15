@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using SchoolProductOrdering.Models;
 using System.Text.Json;
 
@@ -9,46 +8,50 @@ namespace SchoolProductOrdering.Pages.Checkout
 {
     public class IndexModel : PageModel
     {
+        // 1. Property to hold the items for the checkout list
         public List<CartItem> CartItems { get; set; } = new();
 
-        // This property calculates the price for the HTML
+        // 2. Property to calculate the total price for the order summary
         public decimal TotalAmount => CartItems.Sum(item => item.Price * item.Quantity);
 
         public void OnGet()
         {
+            // 3. Retrieve the cart items from the Session memory
             var cartJson = HttpContext.Session.GetString("CartItems");
+
             if (!string.IsNullOrEmpty(cartJson))
             {
+                // Convert the JSON text back into a C# list of CartItems
                 CartItems = JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new();
             }
         }
 
-        // This method clears the cart when the button is clicked
-        public async Task<IActionResult> OnPostAddToCartAsync(int productId)
+        // 4. Method to clear the cart after payment or if the user clicks "Clear"
+        public IActionResult OnPostUpdateQuantity(int productId, int increment)
         {
-            var product = await _context.Products.FindAsync(productId);
-            if (product == null) return NotFound();
-
-            // Get current cart or create new
             var cartJson = HttpContext.Session.GetString("CartItems");
-            List<CartItem> cart = string.IsNullOrEmpty(cartJson)
-                ? new List<CartItem>()
-                : JsonSerializer.Deserialize<List<CartItem>>(cartJson)!;
+            if (string.IsNullOrEmpty(cartJson)) return RedirectToPage();
 
-            // Add item
-            cart.Add(new CartItem
+            var cart = JsonSerializer.Deserialize<List<CartItem>>(cartJson)!;
+            var item = cart.FirstOrDefault(i => i.ProductId == productId);
+
+            if (item != null)
             {
-                ProductId = product.Id,
-                ProductName = product.Name,
-                Price = product.Price,
-                Quantity = 1
-            });
+                // Increase or decrease the quantity
+                item.Quantity += increment;
 
-            // Save back to Session
+                // If quantity drops to 0, remove the item entirely
+                if (item.Quantity <= 0)
+                {
+                    cart.Remove(item);
+                }
+            }
+
+            // Save the updated list back to the session
             HttpContext.Session.SetString("CartItems", JsonSerializer.Serialize(cart));
-            HttpContext.Session.SetInt32("CartCount", cart.Count);
+            HttpContext.Session.SetInt32("CartCount", cart.Sum(i => i.Quantity));
 
             return RedirectToPage();
         }
     }
-} 
+}
