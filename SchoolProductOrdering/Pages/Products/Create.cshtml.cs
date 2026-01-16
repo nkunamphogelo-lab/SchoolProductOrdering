@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolProductOrdering.Data;
 using SchoolProductOrdering.Models;
 
@@ -12,22 +7,21 @@ namespace SchoolProductOrdering.Pages.Products
 {
     public class CreateModel : PageModel
     {
-        private readonly SchoolProductOrdering.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CreateModel(SchoolProductOrdering.Data.ApplicationDbContext context)
+        public CreateModel(ApplicationDbContext context)
         {
             _context = context;
         }
+
+        [BindProperty]
+        public Product Product { get; set; } = default!;
 
         public IActionResult OnGet()
         {
             return Page();
         }
 
-        [BindProperty]
-        public Product Product { get; set; } = default!;
-
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -35,6 +29,7 @@ namespace SchoolProductOrdering.Pages.Products
                 return Page();
             }
 
+            // Add the new stationery item to the database
             _context.Products.Add(Product);
             await _context.SaveChangesAsync();
 

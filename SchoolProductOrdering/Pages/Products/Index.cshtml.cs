@@ -16,20 +16,31 @@ namespace SchoolProductOrdering.Pages.Products
             db_context = context;
         }
 
-        // Holds the list of products for the catalog
         public List<Product> Products { get; set; } = new();
+
+        // 1. Property to track the selected category from the URL
+        [BindProperty(SupportsGet = true)]
+        public string? SelectedCategory { get; set; }
 
         public async Task OnGetAsync()
         {
-            // Fetch all products from the database
-            Products = await db_context.Products.ToListAsync();
+            // Start with all products as a queryable list
+            var query = db_context.Products.AsQueryable();
 
-            // This ensures the page "remembers" the cart when it loads
+            // 2. Filter logic: check if the name or description contains the category keyword
+            if (!string.IsNullOrEmpty(SelectedCategory))
+            {
+                query = query.Where(p => p.Name.Contains(SelectedCategory) ||
+                                         p.Description.Contains(SelectedCategory));
+            }
+
+            // Execute the query and get the list
+            Products = await query.ToListAsync();
+
             var cartJson = HttpContext.Session.GetString("CartItems");
             if (!string.IsNullOrEmpty(cartJson))
             {
-                // We don't need to do anything with the list here, 
-                // but this ensures the Session is active.
+                // Session tracking logic remains active
             }
         }
 
@@ -38,26 +49,32 @@ namespace SchoolProductOrdering.Pages.Products
             var product = await db_context.Products.FindAsync(productId);
             if (product == null) return NotFound();
 
-            // Retrieve current cart
             var cartJson = HttpContext.Session.GetString("CartItems");
             var cart = string.IsNullOrEmpty(cartJson)
                 ? new List<CartItem>()
                 : JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new();
 
-            // Add the item to the list
-            cart.Add(new CartItem
+            // Check if item already exists to increment quantity instead of adding a new row
+            var existingItem = cart.FirstOrDefault(c => c.ProductId == productId);
+            if (existingItem != null)
             {
-                ProductId = product.Id,
-                ProductName = product.Name,
-                Price = product.Price,
-                Quantity = 1
-            });
+                existingItem.Quantity++;
+            }
+            else
+            {
+                cart.Add(new CartItem
+                {
+                    ProductId = product.Id,
+                    ProductName = product.Name,
+                    Price = product.Price,
+                    Quantity = 1
+                });
+            }
 
-            // Save the list back to Session
             HttpContext.Session.SetString("CartItems", JsonSerializer.Serialize(cart));
 
-            // Update the little red number in the Navbar
-            HttpContext.Session.SetInt32("CartCount", cart.Count);
+            // Update the navbar count to show total items, not just unique rows
+            HttpContext.Session.SetInt32("CartCount", cart.Sum(i => i.Quantity));
 
             return RedirectToPage();
         }

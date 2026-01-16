@@ -12,13 +12,19 @@ namespace SchoolProductOrdering.Pages.Checkout
 
         public decimal TotalAmount => CartItems.Sum(item => item.Price * item.Quantity);
 
-        // 1. Added property to tell the HTML to show the success message
         public bool IsSuccess { get; set; } = false;
 
-        public void OnGet(bool success = false)
+        // 1. Property to store the selected payment method
+        [BindProperty]
+        public string SelectedPaymentMethod { get; set; } = "Credit Card";
+
+        // 2. Property to display the payment method on the success screen
+        public string? ConfirmedMethod { get; set; }
+
+        public void OnGet(bool success = false, string? method = null)
         {
-            // If the URL has ?success=true, we show the thank you message
             IsSuccess = success;
+            ConfirmedMethod = method;
 
             var cartJson = HttpContext.Session.GetString("CartItems");
 
@@ -28,7 +34,6 @@ namespace SchoolProductOrdering.Pages.Checkout
             }
         }
 
-        // 2. Updated UpdateQuantity to handle the Trash Can as well
         public IActionResult OnPostUpdateQuantity(int productId, int increment)
         {
             var cartJson = HttpContext.Session.GetString("CartItems");
@@ -53,20 +58,20 @@ namespace SchoolProductOrdering.Pages.Checkout
             return RedirectToPage();
         }
 
-        // 3. New Method: Process Payment and Clear Cart
+        // 3. Updated to capture the payment method before clearing the cart
         public IActionResult OnPostProcessPayment()
         {
-            // Here you would normally save the order to a Database
+            // Store the method used for the order
+            string methodUsed = SelectedPaymentMethod;
 
             // Clear the session data
             HttpContext.Session.Remove("CartItems");
             HttpContext.Session.SetInt32("CartCount", 0);
 
-            // Redirect back to the GET method with a success flag
-            return RedirectToPage(new { success = true });
+            // Redirect with both the success flag AND the payment method used
+            return RedirectToPage(new { success = true, method = methodUsed });
         }
 
-        // 4. Method to manually clear the cart
         public IActionResult OnPostClearCart()
         {
             HttpContext.Session.Remove("CartItems");
