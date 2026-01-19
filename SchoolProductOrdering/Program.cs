@@ -26,6 +26,9 @@ using (var scope = app.Services.CreateScope())
 
     context.Database.EnsureCreated(); // Ensures table exists
 
+    // This line tells the app to run the SeedData logic
+    SeedData.Initialize(services);
+
     if (!context.Products.Any()) // Only adds if table is empty
     {
         context.Products.AddRange(

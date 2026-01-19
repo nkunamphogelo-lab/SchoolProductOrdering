@@ -1,0 +1,90 @@
+﻿@page
+@model SchoolProductOrdering.Pages.CartModel
+@{
+    ViewData["Title"] = "Your School Bag";
+}
+
+<div class="container py-5">
+    <h2 class="fw-bold mb-4" style="color: #CF3338;">Your School Bag</h2>
+
+    @if (!Model.CartItems.Any())
+    {
+        <div class="alert alert-info border-0 shadow-sm text-center py-4">
+            <i class="bi bi-cart-x fs-1 d-block mb-2"></i>
+            Your bag is empty! <a asp-page="/Products/Index" class="fw-bold" style="color: #017C45;">Go get some stationery!</a>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Item</th>
+                                <th>Price</th>
+                                <th class="text-center">Quantity</th>
+                                <th>Total</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CartItems)
+                            {
+                                <tr>
+                                    <td class="ps-4 fw-bold">@item.ProductName</td>
+                                    <td>R @item.Price.ToString("N2")</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center align-items-center gap-2">
+                                            <form method="post" asp-page-handler="UpdateQuantity">
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <input type="hidden" name="change" value="-1" />
+                                                <button type="submit" class="btn btn-sm btn-outline-secondary rounded-circle" style="width: 30px; height: 30px; padding: 0;">-</button>
+                                            </form>
+
+                                            <span class="fw-bold" style="min-width: 20px; text-align: center;">@item.Quantity</span>
+
+                                            <form method="post" asp-page-handler="UpdateQuantity">
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <input type="hidden" name="change" value="1" />
+                                                <button type="submit" class="btn btn-sm btn-outline-secondary rounded-circle" style="width: 30px; height: 30px; padding: 0;">+</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                    <td class="fw-bold">R @((item.Price * item.Quantity).ToString("N2"))</td>
+                                    <td class="text-end pe-4">
+                                        <form method="post" asp-page-handler="Remove">
+                                            <input type="hidden" name="productId" value="@item.ProductId" />
+                                            <button type="submit" class="btn btn-sm btn-link text-danger p-0" title="Remove Item">
+                                                <i class="bi bi-trash3-fill fs-5"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-4 bg-light border-top">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <a asp-page="/Products/Index" class="btn btn-outline-dark rounded-pill">
+                                <i class="bi bi-arrow-left"></i> Continue Shopping
+                            </a>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <h3 class="mb-3">Total: <span style="color: #CF3338;">R @Model.TotalAmount.ToString("N2")</span></h3>
+
+                            <a asp-page="/Checkout" class="btn btn-lg text-white rounded-pill px-5 shadow-sm"
+                               style="background-color: #017C45; font-weight: bold;">
+                                Proceed to Checkout <i class="bi bi-credit-card-2-back ms-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -5,28 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LearnMate</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body style="background-color: #f8f9fa;">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-3">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-transparent border-0 position-absolute w-100" style="z-index: 10;">
             <div class="container">
-                <a class="navbar-brand fw-bold" asp-page="/Index" style="color: #CF3338;">LearnMate</a>
+                <a class="navbar-brand fw-bold" asp-page="/Index" style="color: #CF3338; font-size: 1.5rem;">LearnMate</a>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Index">Home</a>
+                            <a class="nav-link text-white fw-bold" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Products/Index">Products</a>
+                            <a class="nav-link text-white fw-bold" asp-page="/Products/Index">Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark position-relative" asp-page="/Checkout/Index">
-                                <i class="bi bi-cart4" style="font-size: 1.2rem;"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    @(Context.Session.GetInt32("CartCount") ?? 0)
-                                </span>
+                            <a class="nav-link text-white fw-bold position-relative" asp-page="/Cart">
+                                <i class="bi bi-cart3"></i> Cart
+                                @if (Context.Session.GetInt32("CartCount") > 0)
+                                {
+                                    <span class="badge rounded-pill bg-danger">
+                                        @Context.Session.GetInt32("CartCount")
+                                    </span>
+                                }
                             </a>
                         </li>
                     </ul>
@@ -35,17 +43,16 @@
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main role="main">
+        @RenderBody()
+    </main>
 
-    <footer class="border-top footer text-muted text-center py-3">
-        <div class="container">
+    <footer class="footer text-muted bg-transparent border-0 fixed-bottom pb-3">
+        <div class="container text-center text-white">
             &copy; 2026 - LearnMate
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

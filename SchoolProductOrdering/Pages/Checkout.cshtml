@@ -1,0 +1,65 @@
+﻿@page
+@model SchoolProductOrdering.Pages.CheckoutModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 p-4">
+                <h3 class="fw-bold mb-4" style="color: #CF3338;">Delivery Details</h3>
+                <form method="post">
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label class="form-label">Name</label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter your name" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label class="form-label">Surname</label>
+                            <input asp-for="Surname" class="form-control" placeholder="Enter your surname" />
+                            <span asp-validation-for="Surname" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Email Address</label>
+                            <input asp-for="Email" class="form-control" type="email" placeholder="you@example.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Cellphone Number</label>
+                            <input asp-for="Phone" class="form-control" placeholder="e.g. 081 234 5678" />
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Location for Delivery</label>
+                            <textarea asp-for="DeliveryLocation" class="form-control" rows="3" placeholder="Enter full address or school room number"></textarea>
+                            <span asp-validation-for="DeliveryLocation" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <button class="w-100 btn btn-lg text-white" style="background-color: #017C45; font-weight: bold;" type="submit">
+                        Complete Order
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-4 mt-4 mt-md-0">
+            <div class="card shadow-sm border-0 p-4 bg-light">
+                <h4 class="fw-bold">Order Summary</h4>
+                <div class="d-flex justify-content-between mt-3">
+                    <span>Total Amount:</span>
+                    <span class="fw-bold fs-5" style="color: #CF3338;">R @Model.TotalAmount.ToString("N2")</span>
+                </div>
+                <p class="text-muted small mt-2">Prices include VAT where applicable.</p>
+            </div>
+        </div>
+    </div>
+</div>
