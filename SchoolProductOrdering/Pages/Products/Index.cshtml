@@ -5,74 +5,127 @@
     ViewData["Title"] = "LearnMate Catalog";
 }
 
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <div>
-            <h2 class="fw-bold" style="color: #CF3338; margin-bottom: 0;">LearnMate Catalog</h2>
-            <p class="text-muted">Quality school supplies for every student.</p>
-        </div>
-        <a asp-page="./Create" class="btn text-white fw-bold shadow-sm" style="background-color: #017C45; border-radius: 8px; padding: 10px 20px;">
-            <i class="bi bi-plus-lg"></i> Add Product
-        </a>
-    </div>
-
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var item in Model.Products)
-        {
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm text-center p-3 transition-card">
-                    <div class="bg-light rounded mb-3 d-flex align-items-center justify-content-center" style="height: 220px; overflow: hidden;">
-                        @if (!string.IsNullOrEmpty(item.ImagePath))
-                        {
-                            <img src="@item.ImagePath"
-                                 class="img-fluid"
-                                 style="max-height: 100%; width: auto; object-fit: contain; padding: 15px;"
-                                 alt="@item.Name"
-                                 onerror="this.src='/image/products/no-image.png'; this.onerror=null;" />
-                        }
-                        else
-                        {
-                            <div class="text-center">
-                                <i class="bi bi-image text-secondary" style="font-size: 3rem;"></i>
-                                <p class="small text-muted mb-0">No Image Path Set</p>
-                            </div>
-                        }
-                    </div>
-
-                    <div class="card-body py-2">
-                        <small class="text-muted fw-bold text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Stationery</small>
-                        <h5 class="card-title fw-bold mt-2 mb-1">@item.Name</h5>
-                        <h4 class="fw-bold" style="color: #CF3338;">R @item.Price.ToString("N2")</h4>
-                        <p class="text-muted small mt-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                            @item.Description
-                        </p>
-                    </div>
-
-                    <div class="card-footer bg-transparent border-0 d-grid gap-2 mt-auto">
-                        <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-outline-dark rounded-pill btn-sm fw-bold">
-                            View Details
-                        </a>
-
-                        <form method="post" asp-page-handler="AddToCart">
-                            <input type="hidden" name="productId" value="@item.Id" />
-                            <button type="submit" class="btn text-white w-100 rounded-pill shadow-sm py-2" style="background-color: #017C45; font-weight: bold;">
-                                <i class="bi bi-cart-plus"></i> Add to Cart
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-</div>
-
 <style>
     .transition-card {
         transition: all 0.3s ease;
     }
 
-        .transition-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
-        }
+    .transition-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+    }
+
+    .product-img {
+        transition: transform 0.5s ease;
+    }
+
+    .product-img:hover {
+        transform: scale(1.08);
+    }
+
+    .search-container {
+        max-width: 600px;
+        margin: 0 auto 40px auto;
+    }
+
+    .search-input {
+        border-radius: 50px 0 0 50px !important;
+        border: 2px solid #eee;
+        padding-left: 25px;
+    }
+
+    .search-btn {
+        border-radius: 0 50px 50px 0 !important;
+        background-color: #017C45;
+        color: white;
+        padding: 0 25px;
+        border: 2px solid #017C45;
+    }
 </style>
+
+<div class="container" style="padding-top: 100px; padding-bottom: 60px;">
+    
+    <div class="text-center mb-4">
+        <h1 class="display-4 fw-bold" style="color: #CF3338;">LearnMate Catalog</h1>
+        <p class="lead text-muted">Quality school supplies for every student.</p>
+        <hr class="mx-auto" style="width: 80px; height: 4px; background-color: #017C45; opacity: 1; border-radius: 2px;">
+    </div>
+
+    <div class="search-container">
+        <form method="get" class="input-group shadow-sm">
+            <input type="text" name="SearchString" class="form-control search-input" 
+                   placeholder="Search for pens, books, or electronics..." value="@Model.CurrentFilter">
+            <button class="btn search-btn" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+        @if (!string.IsNullOrEmpty(Model.CurrentFilter))
+        {
+            <div class="text-center mt-2">
+                <a asp-page="./Index" class="text-decoration-none small text-muted">
+                    <i class="bi bi-x-circle"></i> Clear search results
+                </a>
+            </div>
+        }
+    </div>
+
+    <div class="d-flex justify-content-end mb-4">
+        <a asp-page="./Create" class="btn text-white fw-bold shadow-sm px-4 py-2" style="background-color: #017C45; border-radius: 50px;">
+            <i class="bi bi-plus-circle me-2"></i> Add New Product
+        </a>
+    </div>
+
+    @if (!Model.Products.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-search text-muted" style="font-size: 3rem;"></i>
+            <p class="mt-3 fs-5 text-muted">We couldn't find any products matching "@Model.CurrentFilter".</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var item in Model.Products)
+            {
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm text-center p-3 transition-card">
+                        <div class="bg-white border rounded mb-3 d-flex align-items-center justify-content-center" style="height: 220px; overflow: hidden;">
+                            @if (!string.IsNullOrEmpty(item.ImagePath))
+                            {
+                                <img src="@item.ImagePath"
+                                     class="img-fluid product-img"
+                                     style="max-height: 100%; width: auto; object-fit: contain; padding: 20px;"
+                                     alt="@item.Name"
+                                     onerror="this.src='/image/products/no-image.png';">
+                            }
+                            else
+                            {
+                                <div class="text-center">
+                                    <i class="bi bi-image text-secondary" style="font-size: 3rem;"></i>
+                                    <p class="small text-muted mb-0">No Image</p>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="card-body py-2">
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Stationery</small>
+                            <h5 class="card-title fw-bold mt-2 mb-1">@item.Name</h5>
+                            <h4 class="fw-bold" style="color: #CF3338;">R @item.Price.ToString("N2")</h4>
+                            <p class="text-muted small mt-2">@item.Description</p>
+                        </div>
+
+                        <div class="card-footer bg-transparent border-0 d-grid gap-2 mt-auto">
+                            <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-outline-dark rounded-pill btn-sm fw-bold">View Details</a>
+                            <form method="post" asp-page-handler="AddToCart">
+                                <input type="hidden" name="productId" value="@item.Id" />
+                                <button type="submit" class="btn text-white w-100 rounded-pill shadow-sm py-2" style="background-color: #017C45; font-weight: bold;">
+                                    <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

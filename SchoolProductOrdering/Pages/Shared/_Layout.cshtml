@@ -14,21 +14,27 @@
             <div class="container">
                 <a class="navbar-brand fw-bold" asp-page="/Index" style="color: #CF3338; font-size: 1.5rem;">LearnMate</a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
+                        @{
+                            // Check if we are on the Home/Index page
+                            var isHomePage = ViewContext.RouteData.Values["page"]?.ToString() == "/Index";
+                            var textColor = isHomePage ? "text-white" : "text-dark";
+                        }
+
                         <li class="nav-item">
-                            <a class="nav-link text-white fw-bold" asp-page="/Index">Home</a>
+                            <a class="nav-link @textColor fw-bold" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white fw-bold" asp-page="/Products/Index">Products</a>
+                            <a class="nav-link @textColor fw-bold" asp-page="/Products/Index">Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white fw-bold position-relative" asp-page="/Cart">
-                                <i class="bi bi-cart3"></i> Cart
+                            <a class="nav-link @textColor fw-bold position-relative" asp-page="/Cart">
+                                Cart
                                 @if (Context.Session.GetInt32("CartCount") > 0)
                                 {
                                     <span class="badge rounded-pill bg-danger">

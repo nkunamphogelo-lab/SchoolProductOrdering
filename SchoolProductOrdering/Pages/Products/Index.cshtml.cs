@@ -18,30 +18,27 @@ namespace SchoolProductOrdering.Pages.Products
 
         public List<Product> Products { get; set; } = new();
 
-        // 1. Property to track the selected category from the URL
+        // These properties were missing, which caused the red squiggles
         [BindProperty(SupportsGet = true)]
-        public string? SelectedCategory { get; set; }
+        public string? SearchString { get; set; }
+
+        public string? CurrentFilter { get; set; }
 
         public async Task OnGetAsync()
         {
-            // Start with all products as a queryable list
+            CurrentFilter = SearchString;
+
+            // Start with your original database table name
             var query = db_context.Products.AsQueryable();
 
-            // 2. Filter logic: check if the name or description contains the category keyword
-            if (!string.IsNullOrEmpty(SelectedCategory))
+            // Filter logic for the search bar
+            if (!string.IsNullOrEmpty(SearchString))
             {
-                query = query.Where(p => p.Name.Contains(SelectedCategory) ||
-                                         p.Description.Contains(SelectedCategory));
+                query = query.Where(p => p.Name.Contains(SearchString) ||
+                                         p.Description.Contains(SearchString));
             }
 
-            // Execute the query and get the list
             Products = await query.ToListAsync();
-
-            var cartJson = HttpContext.Session.GetString("CartItems");
-            if (!string.IsNullOrEmpty(cartJson))
-            {
-                // Session tracking logic remains active
-            }
         }
 
         public async Task<IActionResult> OnPostAddToCartAsync(int productId)
@@ -54,7 +51,6 @@ namespace SchoolProductOrdering.Pages.Products
                 ? new List<CartItem>()
                 : JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new();
 
-            // Check if item already exists to increment quantity instead of adding a new row
             var existingItem = cart.FirstOrDefault(c => c.ProductId == productId);
             if (existingItem != null)
             {
@@ -72,8 +68,6 @@ namespace SchoolProductOrdering.Pages.Products
             }
 
             HttpContext.Session.SetString("CartItems", JsonSerializer.Serialize(cart));
-
-            // Update the navbar count to show total items, not just unique rows
             HttpContext.Session.SetInt32("CartCount", cart.Sum(i => i.Quantity));
 
             return RedirectToPage();
