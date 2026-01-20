@@ -21,25 +21,22 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
                         @{
-                            // Check if we are on the Home/Index page
                             var isHomePage = ViewContext.RouteData.Values["page"]?.ToString() == "/Index";
-                            var textColor = isHomePage ? "text-white" : "text-dark";
+                            // text-dark ensures visibility on white backgrounds
+                            var linkColor = isHomePage ? "text-white" : "text-secondary";
                         }
-
                         <li class="nav-item">
-                            <a class="nav-link @textColor fw-bold" asp-page="/Index">Home</a>
+                            <a class="nav-link @linkColor fw-bold" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @textColor fw-bold" asp-page="/Products/Index">Products</a>
+                            <a class="nav-link @linkColor fw-bold" asp-page="/Products/Index">Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @textColor fw-bold position-relative" asp-page="/Cart">
+                            <a class="nav-link @linkColor fw-bold position-relative" asp-page="/Cart">
                                 Cart
                                 @if (Context.Session.GetInt32("CartCount") > 0)
                                 {
-                                    <span class="badge rounded-pill bg-danger">
-                                        @Context.Session.GetInt32("CartCount")
-                                    </span>
+                                    <span class="badge rounded-pill bg-danger">@Context.Session.GetInt32("CartCount")</span>
                                 }
                             </a>
                         </li>

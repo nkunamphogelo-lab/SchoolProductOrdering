@@ -1,47 +1,36 @@
 ﻿@page
+@model SchoolProductOrdering.Pages.OrderSuccessModel
 @{
-    ViewData["Title"] = "Order Successful";
+    ViewData["Title"] = "Thank You";
 }
 
 <div class="container py-5 text-center">
-    <div id="receipt-area">
-        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-        <h1 class="fw-bold mt-3">Thank You!</h1>
-        <p class="lead text-muted">Your order has been placed successfully.</p>
-        <hr class="my-4 mx-auto" style="max-width: 400px;">
-
-        <div class="text-start mx-auto p-4 bg-light rounded shadow-sm" style="max-width: 500px;">
-            <h5 class="fw-bold mb-3">Order Details</h5>
-            <p class="mb-1"><strong>Status:</strong> Pending Delivery</p>
-            <p class="mb-1"><strong>Date:</strong> @DateTime.Now.ToString("f")</p>
-            <p class="text-muted small mt-3">A confirmation email will be sent to your provided address.</p>
-        </div>
+    <div class="mb-4">
+        <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
     </div>
 
-    <div class="mt-5 d-flex justify-content-center gap-3 no-print">
-        <button onclick="window.print()" class="btn btn-outline-dark rounded-pill px-4">
-            <i class="bi bi-file-earmark-pdf"></i> Download Receipt
-        </button>
+    <h1 class="display-4 fw-bold">Thank You!</h1>
+    <p class="lead text-muted">Your order has been placed successfully.</p>
+    <hr class="mx-auto" style="max-width: 400px;">
 
-        <a asp-page="/Products/Index" class="btn btn-success rounded-pill px-4">
+    <div class="card p-4 border-0 shadow-sm text-start mx-auto mt-4" style="max-width: 500px;">
+        <h4 class="fw-bold mb-3">Order Details</h4>
+
+        <p class="mb-2"><strong>Order Date:</strong> @TempData["OrderDate"]</p>
+        <p class="mb-2"><strong>Estimated Delivery:</strong> @TempData["DeliveryDate"]</p>
+
+        <p class="text-muted small mt-3">
+            <i class="bi bi-envelope-check text-success me-2"></i>
+            A confirmation email has been sent to <strong>@TempData["UserEmail"]</strong>.
+        </p>
+    </div>
+
+    <div class="mt-5 d-flex justify-content-center gap-3">
+        <button onclick="window.print()" class="btn btn-outline-dark rounded-pill px-4">
+            <i class="bi bi-printer me-2"></i> Print Receipt
+        </button>
+        <a asp-page="/Products/Index" class="btn text-white rounded-pill px-4" style="background-color: #017C45;">
             Return to Shop
         </a>
     </div>
 </div>
-
-<style>
-    @@media print {
-        .no-print {
-            display: none !important;
-        }
-
-        body {
-            background-color: white !important;
-        }
-
-        .container {
-            margin: 0 !important;
-            padding: 20px !important;
-        }
-    }
-</style>

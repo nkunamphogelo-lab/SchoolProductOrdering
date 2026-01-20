@@ -44,6 +44,28 @@
 
                     <hr class="my-4">
 
+                    <h4 class="mt-4 mb-3" style="color: #CF3338;">Payment Method</h4>
+                    <div class="card p-3 border-0 shadow-sm mb-4">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="creditCard" value="CreditCard" checked>
+                            <label class="form-check-label fw-bold" for="creditCard">
+                                <i class="bi bi-credit-card me-2"></i> Credit or Debit Card
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="eft" value="EFT">
+                            <label class="form-check-label fw-bold" for="eft">
+                                <i class="bi bi-bank me-2"></i> Instant EFT
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="cod" value="COD">
+                            <label class="form-check-label fw-bold" for="cod">
+                                <i class="bi bi-cash-stack me-2"></i> Cash on Delivery
+                            </label>
+                        </div>
+                    </div>
+
                     <button class="w-100 btn btn-lg text-white" style="background-color: #017C45; font-weight: bold;" type="submit">
                         Complete Order
                     </button>
