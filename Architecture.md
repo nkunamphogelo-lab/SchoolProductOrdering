@@ -1,31 +1,64 @@
-subgraph Application_Layer
-    Browser -->|GET/POST| Razor[Razor Pages]
-    Razor -->|Logic| ViewModel[Checkout/Product PageModels]
-end
+# System Architecture
 
-subgraph Data_Layer
-    ViewModel -->|Entity Framework| DB[(SQL Database)]
-    ViewModel -->|SMTP| Mail[Gmail Server]
-end
+## Architectural Overview
+The School Product Ordering System follows a **layered architecture** design pattern.
 
-PRODUCT {
-    int Id PK "Primary Key"
-    string Name "Product Name"
-    string Description "Details"
-    decimal Price "Cost"
-    string ImagePath "Url to image"
-}
+The system is divided into the following layers:
 
-CART_ITEM {
-    int ProductId FK "Foreign Key to Product"
-    string ProductName "Display Name"
-    decimal Price "Price at time of add"
-    int Quantity "Number of items"
-}
+1. Presentation Layer (Razor Pages)
+2. Business Logic Layer (Page Models)
+3. Data Access Layer (Entity Framework Core)
+4. Database Layer (SQL Server)
 
-U->>C: Clicks "Complete Order"
-C->>C: Validate Form (Name, Email, etc.)
-C->>S: Clear "CartItems" & "CartCount"
-C->>E: SendRealEmail(userEmail)
-E-->>U: Deliver Confirmation Email
-C->>U: Redirect to OrderSuccess
+---
+
+## Architecture Description
+
+### 1. Presentation Layer
+- Built using Razor Pages
+- Responsible for displaying pages to users
+- Handles user input and navigation
+
+### 2. Business Logic Layer
+- Contains PageModel classes
+- Processes user actions
+- Communicates between UI and database
+
+### 3. Data Access Layer
+- Uses Entity Framework Core
+- Maps C# models to database tables
+- Handles CRUD operations
+
+### 4. Database Layer
+- SQL Server LocalDB
+- Stores products and order-related data
+
+---
+
+## Entity Relationship Diagram (ERD)
+
+The following diagram represents the database structure of the system:
+```mermaid
+erDiagram
+    PRODUCT {
+        int Id
+        string Name
+        decimal Price
+        string Description
+        string ImagePath
+    }
+
+    ORDER {
+        int Id
+        datetime OrderDate
+        decimal TotalAmount
+    }
+
+    ORDER_ITEM {
+        int Id
+        int Quantity
+        decimal Price
+    }
+
+    PRODUCT ||--o{ ORDER_ITEM : contains
+    ORDER ||--o{ ORDER_ITEM : includes

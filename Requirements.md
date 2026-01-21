@@ -1,64 +1,40 @@
-# System Architecture
+# System Requirements
 
-## Architectural Overview
-The School Product Ordering System follows a **layered architecture** design pattern.
+## 1. Functional Requirements
 
-The system is divided into the following layers:
+### 1.1 User Requirements
+- Users must be able to view available school products
+- Users must be able to view product images, prices, and descriptions
+- Users must be able to add products to a shopping cart
+- Users must be able to place an order
 
-1. Presentation Layer (Razor Pages)
-2. Business Logic Layer (Page Models)
-3. Data Access Layer (Entity Framework Core)
-4. Database Layer (SQL Server)
+### 1.2 Admin Requirements
+- Admin must be able to add new products
+- Admin must be able to edit existing products
+- Admin must be able to delete products
+- Admin must be able to view product listings
 
 ---
 
-## Architecture Description
+## 2. Non-Functional Requirements
+- The system must be web-based
+- The system must be easy to use
+- The system must respond quickly to user actions
+- The system must store data securely in a database
+- The system must be accessible via modern web browsers
 
-### 1. Presentation Layer
-- Built using Razor Pages
-- Responsible for displaying pages to users
-- Handles user input and navigation
+---
 
-### 2. Business Logic Layer
-- Contains PageModel classes
-- Processes user actions
-- Communicates between UI and database
+## 3. Hardware Requirements
+- Computer or laptop
+- Minimum 4GB RAM
+- Internet connection (for development tools)
 
-### 3. Data Access Layer
-- Uses Entity Framework Core
-- Maps C# models to database tables
-- Handles CRUD operations
+---
 
-### 4. Database Layer
+## 4. Software Requirements
+- Windows 10 or later
+- Visual Studio 2022
+- .NET 8 SDK
 - SQL Server LocalDB
-- Stores products and order-related data
-
----
-
-## Entity Relationship Diagram (ERD)
-
-The following diagram represents the database structure of the system:
-```mermaid
-erDiagram
-    PRODUCT {
-        int Id
-        string Name
-        decimal Price
-        string Description
-        string ImagePath
-    }
-
-    ORDER {
-        int Id
-        datetime OrderDate
-        decimal TotalAmount
-    }
-
-    ORDER_ITEM {
-        int Id
-        int Quantity
-        decimal Price
-    }
-
-    PRODUCT ||--o{ ORDER_ITEM : contains
-    ORDER ||--o{ ORDER_ITEM : includes
+- Web browser (Chrome, Edge, Firefox)
