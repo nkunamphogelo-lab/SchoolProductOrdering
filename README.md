@@ -1,4 +1,3 @@
 ## Project Documentation
-Check out our detailed documentation in the links below:
-* [System Architecture & Entity Diagrams](./docs/Architecture.md)
-* [Project Requirements](./docs/Requirements.md)
+* [View System Architecture & Entity Diagram](./docs/Architecture.md)
+* [View Project Requirements](./docs/Requirements.md)
