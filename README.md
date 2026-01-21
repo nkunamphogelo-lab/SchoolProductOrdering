@@ -1,17 +1,4 @@
-graph LR
-    User((Student)) -->|Uses| Browser[Web Browser]
-    Browser -->|ASP.NET Core| Pages[Razor Pages]
-    Pages -->|Stores Data| DB[(SQL Database)]
-    Pages -->|Sends Email| Gmail[Gmail SMTP]
-
-    erDiagram
-    PRODUCT {
-        int Id
-        string Name
-        decimal Price
-    }
-    CART_ITEM {
-        int ProductId
-        int Quantity
-    }
-    PRODUCT ||--o{ CART_ITEM : "added to"
+## Project Documentation
+Check out our detailed documentation in the links below:
+* [System Architecture & Entity Diagrams](./docs/Architecture.md)
+* [Project Requirements](./docs/Requirements.md)
